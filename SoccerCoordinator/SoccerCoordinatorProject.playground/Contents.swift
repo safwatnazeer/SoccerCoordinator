@@ -27,22 +27,25 @@ allPalyers.append(["name":"Phillip Helm", "height":44 , "soccer experience":"YES
 /// reset teh following two players to YES , they were no to test code
 allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"YES" , "guardians":"Wynonna Brown"])
 allPalyers.append(["name":"Herschel Krustofski", "height":45 , "soccer experience":"NO" , "guardians":"Hyman and Rachel Krustofski"])
+// dummy
+allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"YES" , "guardians":"Wynonna Brown"])
+allPalyers.append(["name":"Herschel Krustofski", "height":45 , "soccer experience":"YES" , "guardians":"Hyman and Rachel Krustofski"])
+allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"YES" , "guardians":"Wynonna Brown"])
+allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"NO" , "guardians":"Wynonna Brown"])
+allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"NO" , "guardians":"Wynonna Brown"])
 
 
+// Final teams goes into those 3 arrays
 var Sharks = [[String: Any]]()
 var Dragons = [[String: Any]]()
 var Raptors = [[String: Any]]()
 
-let numberOfTeams = 3
-var experiencedPlayers = [[String: Any]]()
-var nonExperiencedPlayers = [[String: Any]]()
+let numberOfTeams = 3                           // Constant to hold how many teams we need
+var experiencedPlayers = [[String: Any]]()      // Intermediate array to hold expereinced players
+var nonExperiencedPlayers = [[String: Any]]()   // Intermediate array to hold non- expereinced players
 
-let maxNumberOfPlayersPerTeam = allPalyers.count / numberOfTeams
+let maxNumberOfPlayersPerTeam = allPalyers.count / numberOfTeams   // contant that define maximum number of players per team
 
-
-
-// decide if number of experinced players can be divided equally on the 3 teams, otherwise one team will get less
-//let experincedPlayersEven:Bool = ((numberOfAllExperienceeriencedPlayers%3) == 0) ? true : false
 
 // Sort by experience in two groups
     for player in allPalyers {
@@ -55,19 +58,9 @@ let maxNumberOfPlayersPerTeam = allPalyers.count / numberOfTeams
         
     }
 
-// Decide what is min and max number of experienced players per team
-// This will solve the problem when not having enough experienced players for all teams
 
-var minExpPlayersPerTeam: Int = experiencedPlayers.count / numberOfTeams
-var doWeHaveEvenExpPlayers : Bool
-if experiencedPlayers.count % numberOfTeams == 0 { doWeHaveEvenExpPlayers = true } else {doWeHaveEvenExpPlayers = false}
-var maxExpPlayersPerTeam = 0
-if doWeHaveEvenExpPlayers == true {maxExpPlayersPerTeam = minExpPlayersPerTeam } else {maxExpPlayersPerTeam = minExpPlayersPerTeam+1}
 
-// distribute players on teams
-// condition 1: each team has min number of expereinced players and not exceeding max number
-// condition 2: all teams have equal number of players
-
+// Helper function to count how many experienced player in a team
 func countExpPlayers(team:[[String: Any]]) -> Int
 {
     var counter = 0
@@ -80,41 +73,46 @@ func countExpPlayers(team:[[String: Any]]) -> Int
     return counter
 }
 
-func checkIfPlayerCanBeAdded(player:[String:Any], teamName:String) -> Bool {
-    
-    switch teamName {
-    case "Sharks":
-        if (countExpPlayers(Sharks) < maxExpPlayersPerTeam) && Sharks.count < maxNumberOfPlayersPerTeam{
-            return true
-        }
-    case "Dragons":
-        if (countExpPlayers(Dragons) < maxExpPlayersPerTeam) && Dragons.count < maxNumberOfPlayersPerTeam{
-            
-            return true
-        }
-    case "Raptors":
-        if (countExpPlayers(Raptors) < maxExpPlayersPerTeam) && Raptors.count < maxNumberOfPlayersPerTeam {
-            return true
-        }
+// Distribute players on teams
+// First distribute expereinced players
+
+
+var index = 0
+for player in experiencedPlayers {
+    let key = index % 3
+    switch key {
+    case   0 : Sharks.append(player)
+    case   1 : Dragons.append(player)
+    case   2 : Raptors.append(player)
     default:
-        return false
+        break
     }
-    return false
+    index += 1
 }
 
-for player in allPalyers {
-    if checkIfPlayerCanBeAdded(player, teamName: "Sharks") {
-         Sharks.append(player)
-    } else if checkIfPlayerCanBeAdded(player, teamName: "Dragons"){
+// Then distribute expereinced players
+for player in nonExperiencedPlayers {
+    if Sharks.count < maxNumberOfPlayersPerTeam {
+        Sharks.append(player)
+    } else
+    if Raptors.count < maxNumberOfPlayersPerTeam {
+        Raptors.append(player)
+    } else
+    if Dragons.count < maxNumberOfPlayersPerTeam {
         Dragons.append(player)
     }
-    else if checkIfPlayerCanBeAdded(player, teamName: "Raptors"){
-        Raptors.append(player)
-    }
 }
-
+    
+experiencedPlayers.count
+nonExperiencedPlayers.count
+allPalyers.count
 
 Sharks.count
 Dragons.count
 Raptors.count
+
+countExpPlayers(Sharks)
+countExpPlayers(Dragons)
+countExpPlayers(Raptors)
+
 
