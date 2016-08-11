@@ -26,8 +26,7 @@ allPalyers.append(["name":"Arnold Willis", "height":43 , "soccer experience":"NO
 allPalyers.append(["name":"Phillip Helm", "height":44 , "soccer experience":"YES" , "guardians":"Thomas Helm and Eva Jones"])
 /// reset teh following two players to YES , they were no to test code
 allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"NO" , "guardians":"Wynonna Brown"])
-allPalyers.append(["name":"Herschel Krustofski", "height":45 , "soccer experience":"YES" , "guardians":"Hyman and Rachel Krustofski"])
-
+allPalyers.append(["name":"Herschel Krustofski", "height":45 , "soccer experience":"NO" , "guardians":"Hyman and Rachel Krustofski"])
 
 // Final teams goes into those 3 arrays
 var Sharks = [[String: Any]]()
@@ -40,6 +39,7 @@ var nonExperiencedPlayers = [[String: Any]]()   // Intermediate array to hold no
 
 let maxNumberOfPlayersPerTeam = allPalyers.count / numberOfTeams   // contant that define maximum number of players per team
 
+var finalTeams = [[String:Any]]()
 
 // Sort by experience in two groups
     for player in allPalyers {
@@ -48,11 +48,14 @@ let maxNumberOfPlayersPerTeam = allPalyers.count / numberOfTeams   // contant th
             experiencedPlayers.append(player)
         } else if experience == "NO" {
             nonExperiencedPlayers.append(player)
+        
         }
         
     }
 
 
+experiencedPlayers.count
+nonExperiencedPlayers.count
 
 // Helper function to count how many experienced player in a team
 func countExpPlayers(team:[[String: Any]]) -> Int
@@ -72,31 +75,91 @@ func countExpPlayers(team:[[String: Any]]) -> Int
 // First distribute expereinced players
 
 var index = 0
-for player in experiencedPlayers {
+while experiencedPlayers.count > 0 {
+    let player =  experiencedPlayers.last
     let key = index % 3
     switch key {
-    case   0 : Sharks.append(player)
-    case   1 : Dragons.append(player)
-    case   2 : Raptors.append(player)
+    case   0 : if Sharks.count<maxNumberOfPlayersPerTeam  { Sharks.append(player!) ; experiencedPlayers.removeLast() }
+    case   1 : if Dragons.count<maxNumberOfPlayersPerTeam { Dragons.append(player!); experiencedPlayers.removeLast() }
+    case   2 : if Raptors.count<maxNumberOfPlayersPerTeam { Raptors.append(player!); experiencedPlayers.removeLast() }
+    default:
+        break
+    }
+    index += 1
+    
+    
+ }
+
+
+Sharks.count
+Dragons.count
+Raptors.count
+
+
+// Then distribute non expereinced players
+
+index = 0
+while nonExperiencedPlayers.count > 0 {
+    let player =  nonExperiencedPlayers.last
+    let key = index % 3
+    switch key {
+    case   0 : if Sharks.count<maxNumberOfPlayersPerTeam  { Sharks.append(player!) ; nonExperiencedPlayers.removeLast() }
+    case   1 : if Dragons.count<maxNumberOfPlayersPerTeam { Dragons.append(player!); nonExperiencedPlayers.removeLast() }
+    case   2 : if Raptors.count<maxNumberOfPlayersPerTeam { Raptors.append(player!); nonExperiencedPlayers.removeLast() }
     default:
         break
     }
     index += 1
 }
 
-// Then distribute non expereinced players
-for player in nonExperiencedPlayers {
-    if Sharks.count < maxNumberOfPlayersPerTeam {
-        Sharks.append(player)
-    } else
-    if Raptors.count < maxNumberOfPlayersPerTeam {
-        Raptors.append(player)
-    } else
-    if Dragons.count < maxNumberOfPlayersPerTeam {
-        Dragons.append(player)
-    }
-}
+Sharks.count
+Dragons.count
+Raptors.count
+
+
+
+
+
+
+/*
+///////////////////////////////////
+// Extra credit: Sort by Height 
+
+func getAverageHeightOfTeam(teamName: String) -> Double
+{
     
+    var totalHeight: Int = 0
+    var average: Double = 0
+    var teamCount: Int = 0
+    
+    for player in finalTeams {
+        if player["team"] as! String == teamName {
+            let playerHeight = player["height"] as! Int
+            totalHeight += playerHeight
+            teamCount += 1
+            print(playerHeight)
+        }
+    }
+    average = Double(totalHeight)/Double(teamCount)
+    return average
+}
+
+func getOverAllAverageHeight() -> Double {
+    
+    var totalHeight: Int = 0
+    for player in allPalyers {
+        let playerHeight = player["height"] as! Int
+        totalHeight += playerHeight
+        print(playerHeight)
+    }
+    let average: Double = Double(totalHeight)/Double(allPalyers.count)
+    return average
+}
+
+
+
+
+
 experiencedPlayers.count
 nonExperiencedPlayers.count
 allPalyers.count
@@ -108,5 +171,95 @@ Raptors.count
 countExpPlayers(Sharks)
 countExpPlayers(Dragons)
 countExpPlayers(Raptors)
+/////////////
+
+getAverageHeightOfTeam("Sharks")
+getAverageHeightOfTeam("Dragons")
+getAverageHeightOfTeam("Raptors")
+
+func checkAverageDiff () -> Bool {
+    
+    if(
+            abs(getAverageHeightOfTeam("Sharks") - getAverageHeightOfTeam("Dragons")) > 1.5 ||
+            abs(getAverageHeightOfTeam("Sharks") - getAverageHeightOfTeam("Raptors")) > 1.5 ||
+            abs(getAverageHeightOfTeam("Dragons") - getAverageHeightOfTeam("Raptors")) > 1.5
+    ) {
+        return false
+    } else {
+        return true
+    }
+
+}
+
+var sortedTeams = [[String:Any]]()
+func sortTeams() {
+    
+    
+    let dragonAverage  = getAverageHeightOfTeam("Dragons")
+    let raptorsAverage = getAverageHeightOfTeam("Raptors")
+    let sharksAverage = getAverageHeightOfTeam("Sharks")
+    
+    sortedTeams.append(["team":"Dragons", "average":dragonAverage ])
+    sortedTeams.append(["team":"Sharks", "average":sharksAverage ])
+    sortedTeams.append(["team":"Raptors", "average":raptorsAverage ])
+    
+    for outer in 0..<sortedTeams.count
+    {
+        let outerTeam = sortedTeams[outer]
+        let outerTeamAverage = outerTeam["average"] as! Double
+        for inner in 0..<sortedTeams.count
+        {
+            var innerTeam = sortedTeams[inner]
+            let innerTeamAverage = innerTeam["average"] as! Double
+            if (innerTeamAverage > outerTeamAverage) {
+                let tempTeam1 = sortedTeams[inner]
+                 sortedTeams[inner] = sortedTeams[outer]
+                 sortedTeams[outer] = tempTeam1
+                
+            }
+        }
+    }
+    
+}
+sortTeams()
+sortedTeams
+
+func sortGroup(inout group: [[String:Any]], key: String) {
+    
+    for outer in 0..<group.count
+    {
+        let outerTeam = group[outer]
+        let outerTeamValue = outerTeam [key] as! Int
+        for inner in 0..<sortedTeams.count
+        {
+            var innerTeam = group[inner]
+            let innerTeamValue = innerTeam[key] as! Int
+            if (innerTeamValue > outerTeamValue) {
+                let tempTeam1 = group[inner]
+                group[inner] = group[outer]
+                group[outer] = tempTeam1
+                
+            }
+        }
+    }
+
+}
+
+func getTallestInTeam(team:String)  {
+    var temp = [[String:Any]]()
+    
+    for player in finalTeams {
+        let t = player["team"] as! String
+        if t == team {
+            temp.append(player)
+        }
+    }
+    
+    sortGroup(&temp, key: "height")
+    print (temp)
+    
+}
+getTallestInTeam("Raptors")
 
 
+*/
