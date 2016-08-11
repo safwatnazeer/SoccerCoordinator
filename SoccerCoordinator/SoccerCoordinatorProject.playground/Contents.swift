@@ -25,14 +25,8 @@ allPalyers.append(["name":"Chloe Alaska", "height":47 , "soccer experience":"NO"
 allPalyers.append(["name":"Arnold Willis", "height":43 , "soccer experience":"NO" , "guardians":"HClaire Willis"])
 allPalyers.append(["name":"Phillip Helm", "height":44 , "soccer experience":"YES" , "guardians":"Thomas Helm and Eva Jones"])
 /// reset teh following two players to YES , they were no to test code
-allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"YES" , "guardians":"Wynonna Brown"])
-allPalyers.append(["name":"Herschel Krustofski", "height":45 , "soccer experience":"NO" , "guardians":"Hyman and Rachel Krustofski"])
-// dummy
-allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"YES" , "guardians":"Wynonna Brown"])
+allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"NO" , "guardians":"Wynonna Brown"])
 allPalyers.append(["name":"Herschel Krustofski", "height":45 , "soccer experience":"YES" , "guardians":"Hyman and Rachel Krustofski"])
-allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"YES" , "guardians":"Wynonna Brown"])
-allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"NO" , "guardians":"Wynonna Brown"])
-allPalyers.append(["name":"Les Clay", "height":42 , "soccer experience":"NO" , "guardians":"Wynonna Brown"])
 
 
 // Final teams goes into those 3 arrays
@@ -73,9 +67,9 @@ func countExpPlayers(team:[[String: Any]]) -> Int
     return counter
 }
 
-// Distribute players on teams
-// First distribute expereinced players
 
+// Distribute players on 3 teams
+// First distribute expereinced players
 
 var index = 0
 for player in experiencedPlayers {
@@ -90,7 +84,7 @@ for player in experiencedPlayers {
     index += 1
 }
 
-// Then distribute expereinced players
+// Then distribute non expereinced players
 for player in nonExperiencedPlayers {
     if Sharks.count < maxNumberOfPlayersPerTeam {
         Sharks.append(player)
